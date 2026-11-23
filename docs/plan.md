@@ -61,7 +61,7 @@ Key cross-cutting pieces:
 
 ---
 
-## Step 1: Project setup, networking and Search
+## Step 1: Project setup, networking and Search (done)
 
 **Goal:** the app launches into tabs, and Search works end to end against Google Books.
 
@@ -96,7 +96,7 @@ Key cross-cutting pieces:
 - Airplane mode (Network Link Conditioner, or turning off the Mac's network) shows the error and "Try again".
 - `RenderPreview` works for `SearchView` with a stub client for each state.
 
-## Step 2: Book details from the API (read-only)
+## Step 2: Book details from the API (read-only) (done)
 
 **Goal:** tapping a search result shows the full details screen. Nothing is saved yet.
 
@@ -122,7 +122,7 @@ Key cross-cutting pieces:
 - Opening a never-seen book offline shows the error dialog.
 - Previews render with stub volumes: one with a cover and one without, one with many categories and one with none.
 
-## Step 3: SwiftData library: Save, Remove, shelf card, offline fallback, Library list
+## Step 3: SwiftData library: Save, Remove, shelf card, offline fallback, Library list (done)
 
 **Goal:** books can be saved and removed, and they show up on the Home tab.
 

@@ -36,3 +36,11 @@ The project uses the JSON-style `inkle.xcodeproj/project.xcproj` (not a `project
 - `SWIFT_VERSION = 5.0` (Swift 5 language mode).
 - App Sandbox enabled with read-only user-selected file access; Info.plist is generated (`GENERATE_INFOPLIST_FILE`), so add keys via `INFOPLIST_KEY_*` build settings or `AddInfoPlist`.
 - `STRING_CATALOG_GENERATE_SYMBOLS` / `SWIFT_EMIT_LOC_STRINGS` are on; development language is `en`.
+
+## Gotchas
+
+- Custom Info.plist keys (e.g. `GoogleBooksAPIKey`) need a real Info.plist entry with `$(VAR)`; `INFOPLIST_KEY_` settings only work for keys Xcode knows.
+- xcconfig values are literal: no quotes around values.
+- `Secrets.xcconfig` must not be a bundle resource (check target membership).
+- The Books API key is iOS-restricted: every request needs the `X-Ios-Bundle-Identifier` header, or Google returns 403.
+- Never read or print `Secrets.xcconfig` or the key value.
