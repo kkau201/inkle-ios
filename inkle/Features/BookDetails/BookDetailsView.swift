@@ -40,6 +40,7 @@ private struct BookDetailsContent: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showAddSheet = false
     @State private var confirmRemove = false
+    @State private var showEdit = false
 
     /// The loaded volume, or on failure the saved copy (no cover, description or tags).
     private var displayed: Volume? {
@@ -65,7 +66,7 @@ private struct BookDetailsContent: View {
                                 .font(.footnote)
                                 .padding(10)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.orange.opacity(0.18), in: RoundedRectangle(cornerRadius: 8))
+                                .background(.inkOrange.opacity(0.25), in: RoundedRectangle(cornerRadius: 8))
                         }
                         Heading(volumeID: volume.id, info: volume.volumeInfo)
                         if let saved { ShelfCard(book: saved) }
@@ -92,8 +93,7 @@ private struct BookDetailsContent: View {
         .toolbar {
             if saved != nil {
                 ToolbarItem(placement: .primaryAction) {
-                    // Step 4 enables Edit.
-                    Button("Edit") {}.disabled(true)
+                    Button("Edit") { showEdit = true }
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("Remove", role: .destructive) { confirmRemove = true }
@@ -106,6 +106,9 @@ private struct BookDetailsContent: View {
         }
         .sheet(isPresented: $showAddSheet) {
             if case .loaded(let volume) = model.phase { AddToShelfSheet(volume: volume) }
+        }
+        .sheet(isPresented: $showEdit) {
+            if let saved { EditBookView(book: saved) }
         }
         .confirmationDialog("Remove book?", isPresented: $confirmRemove, titleVisibility: .visible) {
             Button("Remove", role: .destructive) {
@@ -149,10 +152,10 @@ private struct Heading: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(info.title ?? "Untitled").font(.title2.bold())
                 if let authors = info.authors, !authors.isEmpty {
-                    Text(authors.joined(separator: ", ")).font(.subheadline).foregroundStyle(.secondary)
+                    Text(authors.joined(separator: ", ")).font(.subheadline).foregroundStyle(.inkMuted)
                 }
                 if !meta.isEmpty {
-                    Text(meta).font(.subheadline).foregroundStyle(.secondary)
+                    Text(meta).font(.subheadline).foregroundStyle(.inkMuted)
                 }
             }
         }
@@ -183,4 +186,11 @@ private struct Heading: View {
         .environment(\.booksClient, StubBooksClient(error: URLError(.notConnectedToInternet)))
         .environment(ConnectivityMonitor())
         .modelContainer(for: SavedBook.self, inMemory: true)
+}
+
+#Preview("Saved") {
+    NavigationStack { BookDetailsView(volumeID: "rich") }
+        .environment(\.booksClient, StubBooksClient(results: [.richSample]))
+        .environment(ConnectivityMonitor())
+        .modelContainer(PreviewData.container())
 }

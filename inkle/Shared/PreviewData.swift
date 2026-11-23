@@ -40,3 +40,28 @@ struct StubBooksClient: BooksClient {
         return results.first { $0.id == id } ?? .sample(id: id)
     }
 }
+
+import SwiftData
+
+enum PreviewData {
+    /// In-memory container with books in every status.
+    @MainActor static func container() -> ModelContainer {
+        let container = try! ModelContainer(for: SavedBook.self,
+                                            configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let titles = ["Dune", "Children of Dune", "The Left Hand of Darkness", "Neuromancer", "Hyperion",
+                      "A Wizard of Earthsea", "The Dispossessed", "Foundation", "Solaris", "Kindred"]
+        for (i, title) in titles.enumerated() {
+            let id = i == 0 ? "rich" : "sample\(i)"
+            let book = SavedBook(volume: .sample(id: id, title: title))
+            switch i % 3 {
+            case 0: book.setStatus(.finished, finishedOn: PartialDate(year: 2024, month: 3, day: nil))
+                    book.rating = 4
+                    book.notes = "A sweeping, patient epic."
+            case 1: book.setStatus(.reading, currentPage: 120 + i)
+            default: break
+            }
+            container.mainContext.insert(book)
+        }
+        return container
+    }
+}

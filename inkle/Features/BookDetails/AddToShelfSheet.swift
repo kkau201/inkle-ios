@@ -24,11 +24,11 @@ struct AddToShelfSheet: View {
                             HStack {
                                 Text(option.label)
                                 Spacer()
-                                if status == option { Image(systemName: "checkmark").foregroundStyle(.tint) }
+                                if status == option { Image(systemName: "checkmark").foregroundStyle(.inkInk) }
                             }
                             .contentShape(Rectangle())
                         }
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.inkInk)
                         .accessibilityAddTraits(status == option ? .isSelected : [])
                     }
                 }

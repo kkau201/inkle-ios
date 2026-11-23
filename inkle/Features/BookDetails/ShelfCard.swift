@@ -24,7 +24,7 @@ struct ShelfCard: View {
                 HStack(spacing: 6) {
                     Text(book.status.label).fontWeight(.semibold)
                     if book.status == .finished, let date = book.finishedDate {
-                        Text("· \(date.formatted)").foregroundStyle(.secondary)
+                        Text("· \(date.formatted)").foregroundStyle(.inkMuted)
                     }
                     Image(systemName: "chevron.up.chevron.down").font(.caption)
                 }
@@ -37,7 +37,7 @@ struct ShelfCard: View {
                 HStack(spacing: 2) {
                     ForEach(1...5, id: \.self) { star in
                         Image(systemName: star <= rating ? "star.fill" : "star")
-                            .foregroundStyle(.yellow)
+                            .foregroundStyle(.inkYellow)
                     }
                 }
                 .accessibilityElement(children: .ignore)
@@ -45,12 +45,12 @@ struct ShelfCard: View {
             }
 
             if let notes = book.notes, !notes.isEmpty {
-                Text(notes).font(.callout).foregroundStyle(.secondary)
+                Text(notes).font(.callout).foregroundStyle(.inkMuted)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+        .background(.inkCard, in: RoundedRectangle(cornerRadius: 12))
     }
 
     private var shownPage: Int? {
@@ -68,7 +68,7 @@ struct ShelfCard: View {
                     Text(fraction, format: .percent.precision(.fractionLength(0)))
                         .font(.subheadline.weight(.medium))
                     ProgressView(value: fraction)
-                    Text("\(page) of \(total) pages").font(.caption).foregroundStyle(.secondary)
+                    Text("\(page) of \(total) pages").font(.caption).foregroundStyle(.inkMuted)
                 }
                 .accessibilityElement(children: .combine)
             } else if book.status == .reading, let page = book.currentPage {

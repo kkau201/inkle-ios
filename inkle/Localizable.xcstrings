@@ -4,6 +4,36 @@
     "· %@" : {
 
     },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
     "%lld books" : {
       "localizations" : {
         "en" : {
@@ -69,6 +99,9 @@
     "Couldn't search" : {
 
     },
+    "Currently reading: %@" : {
+
+    },
     "Day" : {
 
     },
@@ -76,6 +109,9 @@
 
     },
     "Edit" : {
+
+    },
+    "Edit book" : {
 
     },
     "Finished" : {
@@ -111,6 +147,9 @@
     "Not set" : {
 
     },
+    "Notes" : {
+
+    },
     "Nothing on this shelf yet." : {
 
     },
@@ -120,13 +159,22 @@
     "On your shelf" : {
 
     },
+    "Opens book details" : {
+
+    },
     "Page you're on" : {
 
     },
     "Rated %lld out of 5" : {
 
     },
+    "Rating" : {
+
+    },
     "Reading" : {
+
+    },
+    "READING" : {
 
     },
     "Remove" : {
@@ -145,6 +193,9 @@
 
     },
     "Showing your saved copy" : {
+
+    },
+    "Status" : {
 
     },
     "This book has %lld pages." : {

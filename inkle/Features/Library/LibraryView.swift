@@ -58,15 +58,16 @@ struct LibraryView: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Hello, \(UserProfile.name)").font(.subheadline).foregroundStyle(.secondary)
+                Text("Hello, \(UserProfile.name)").font(.subheadline).foregroundStyle(.inkMuted)
                 Text("Library").font(.largeTitle.bold())
-                Text("\(books.count) books").font(.subheadline).foregroundStyle(.secondary)
+                Text("\(books.count) books").font(.subheadline).foregroundStyle(.inkMuted)
             }
             Spacer()
             Text(UserProfile.initials)
                 .font(.headline)
                 .frame(width: 44, height: 44)
-                .background(.tint.opacity(0.2), in: Circle())
+                .background(.inkYellow, in: Circle())
+                .foregroundStyle(.inkInkBase)
                 .accessibilityHidden(true)
         }
     }
@@ -80,9 +81,9 @@ struct LibraryView: View {
                             .font(.subheadline)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 7)
-                            .background(filter == option ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary.opacity(0.15)),
+                            .background(filter == option ? AnyShapeStyle(.inkInk) : AnyShapeStyle(.inkCover),
                                         in: Capsule())
-                            .foregroundStyle(filter == option ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
+                            .foregroundStyle(filter == option ? AnyShapeStyle(.inkOnInk) : AnyShapeStyle(.inkInk))
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(filter == option ? .isSelected : [])
@@ -91,28 +92,27 @@ struct LibraryView: View {
         }
     }
 
-    // Temporary layout; step 4 replaces it with the wooden shelf.
-    private var grid: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 10) {
-            ForEach(filtered) { book in
-                NavigationLink(value: BookRoute(volumeID: book.volumeID)) {
-                    Text(book.title)
-                        .font(.caption.bold())
-                        .foregroundStyle(.black.opacity(0.8))
-                        .lineLimit(5)
-                        .multilineTextAlignment(.leading)
-                        .padding(8)
-                        .frame(maxWidth: .infinity, minHeight: 120, alignment: .topLeading)
-                        .background(BookAppearance(volumeID: book.volumeID).color,
-                                    in: RoundedRectangle(cornerRadius: 4))
-                }
-                .buttonStyle(.plain)
-            }
+    private var shelfItems: [ShelfItem] {
+        var books = filtered
+        var items: [ShelfItem] = []
+        // Under All, the first book being read is pulled out and placed first.
+        if filter == .all, let i = books.firstIndex(where: { $0.status == .reading }) {
+            items.append(ShelfItem(book: books.remove(at: i), kind: .cover))
         }
+        return items + books.map { ShelfItem(book: $0, kind: .spine) }
+    }
+
+    private var grid: some View {
+        ShelfView(items: shelfItems)
     }
 }
 
 #Preview("Empty") {
     NavigationStack { LibraryView() }
         .modelContainer(for: SavedBook.self, inMemory: true)
+}
+
+#Preview("Full shelf") {
+    NavigationStack { LibraryView() }
+        .modelContainer(PreviewData.container())
 }

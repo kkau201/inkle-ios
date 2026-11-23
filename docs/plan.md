@@ -162,7 +162,7 @@ Key cross-cutting pieces:
 - Data survives relaunch.
 - Offline, a saved book that was never cached shows the saved-copy banner and loads fully once the network is back.
 
-## Step 4: Wooden shelf, Edit book, polish
+## Step 4: Wooden shelf, Edit book, polish (done)
 
 **Goal:** the app matches the spec.
 

@@ -13,11 +13,11 @@ struct SearchRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(info.title ?? "Untitled").font(.headline).lineLimit(2)
                 if let authors = info.authors, !authors.isEmpty {
-                    Text(authors.joined(separator: ", ")).font(.subheadline).foregroundStyle(.secondary)
+                    Text(authors.joined(separator: ", ")).font(.subheadline).foregroundStyle(.inkMuted)
                 }
                 let meta = [info.year, info.tags.first].compactMap { $0 }.joined(separator: " · ")
                 if !meta.isEmpty {
-                    Text(meta).font(.caption).foregroundStyle(.secondary)
+                    Text(meta).font(.caption).foregroundStyle(.inkMuted)
                 }
             }
         }

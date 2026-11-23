@@ -46,9 +46,9 @@ struct TagChips: View {
             .lineLimit(1)
             .padding(.horizontal, horizontalPadding)
             .padding(.vertical, 5)
-            .background(tinted ? AnyShapeStyle(.tint.opacity(0.15)) : AnyShapeStyle(.secondary.opacity(0.15)),
+            .background(tinted ? AnyShapeStyle(.inkYellow) : AnyShapeStyle(.inkCover),
                         in: Capsule())
-            .foregroundStyle(tinted ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+            .foregroundStyle(tinted ? AnyShapeStyle(.inkInkBase) : AnyShapeStyle(.inkInk))
     }
 
     /// How many tags fit on one line next to the "+N" chip, measured with the footnote font so the
