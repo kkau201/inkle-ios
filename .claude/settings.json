@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(npx ctx7:*)",
+      "Bash(ctx7:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(adb:*)"
+    ],
+    "deny": [
+      "Bash(firebase deploy:*)",
+      "Read(./secrets.properties)",
+      "Read(./.gradle/**)",
+      "Read(./build/**)",
+      "Read(./app/build/**)",
+      "Read(./buildSrc/build/**)",
+      "Read(./.idea/**)",
+      "Read(./**/*.apk)",
+      "Read(./**/*.aab)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Grep|mcp__ide-tools__.*",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.sh\"" }
+        ]
+      }
+    ]
+  }
+}
