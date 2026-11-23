@@ -24,10 +24,11 @@ final class BookDetailsViewModel {
 
     func load() async {
         if case .loaded = phase { return }
-        phase = .loading
+        if case .failed = phase {} else { phase = .loading }
         do {
             let volume = try await client.volume(id: volumeID)
             about = volume.volumeInfo.description.flatMap(HTMLText.attributedString(from:))
+            showError = false
             phase = .loaded(volume)
         } catch {
             if Task.isCancelled || (error as? URLError)?.code == .cancelled { return }

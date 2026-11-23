@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 struct BookRoute: Hashable {
@@ -8,10 +9,7 @@ struct RootTabView: View {
     var body: some View {
         TabView {
             NavigationStack {
-                EmptyStateView(symbol: "books.vertical",
-                               title: "Dust settled in",
-                               message: "Books you save will gather here.")
-                    .navigationTitle("Library")
+                LibraryView()
                     .navigationDestination(for: BookRoute.self) { route in
                         BookDetailsView(volumeID: route.volumeID)
                     }
@@ -25,5 +23,8 @@ struct RootTabView: View {
 }
 
 #Preview {
-    RootTabView().environment(\.booksClient, StubBooksClient())
+    RootTabView()
+        .environment(\.booksClient, StubBooksClient())
+        .environment(ConnectivityMonitor())
+        .modelContainer(for: SavedBook.self, inMemory: true)
 }

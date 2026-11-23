@@ -1,15 +1,23 @@
+import SwiftData
 import SwiftUI
 
 struct BookDetailsView: View {
     let volumeID: String
 
     @Environment(\.booksClient) private var client
+    @Environment(ConnectivityMonitor.self) private var monitor
     @State private var model: BookDetailsViewModel?
+    @Query private var saved: [SavedBook]
+
+    init(volumeID: String) {
+        self.volumeID = volumeID
+        _saved = Query(filter: #Predicate<SavedBook> { $0.volumeID == volumeID })
+    }
 
     var body: some View {
         Group {
             if let model {
-                BookDetailsContent(model: model)
+                BookDetailsContent(model: model, saved: saved.first)
             } else {
                 Color.clear
             }
@@ -18,24 +26,49 @@ struct BookDetailsView: View {
             if model == nil { model = BookDetailsViewModel(volumeID: volumeID, client: client) }
             await model?.load()
         }
+        .onChange(of: monitor.isConnected) { _, connected in
+            if connected { Task { await model?.load() } }
+        }
     }
 }
 
 private struct BookDetailsContent: View {
     @Bindable var model: BookDetailsViewModel
+    let saved: SavedBook?
+
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @State private var showAddSheet = false
+    @State private var confirmRemove = false
+
+    /// The loaded volume, or on failure the saved copy (no cover, description or tags).
+    private var displayed: Volume? {
+        switch model.phase {
+        case .loaded(let volume): return volume
+        case .failed: return saved?.asVolume
+        case .loading: return nil
+        }
+    }
+
+    private var isShowingSavedCopy: Bool {
+        if case .failed = model.phase { return saved != nil }
+        return false
+    }
 
     var body: some View {
         Group {
-            switch model.phase {
-            case .loading:
-                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-            case .failed:
-                Color.clear
-            case .loaded(let volume):
+            if let volume = displayed {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
+                        if isShowingSavedCopy {
+                            Label("Showing your saved copy", systemImage: "icloud.slash")
+                                .font(.footnote)
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(.orange.opacity(0.18), in: RoundedRectangle(cornerRadius: 8))
+                        }
                         Heading(volumeID: volume.id, info: volume.volumeInfo)
+                        if let saved { ShelfCard(book: saved) }
                         if !volume.volumeInfo.tags.isEmpty {
                             TagChips(tags: volume.volumeInfo.tags)
                         }
@@ -49,11 +82,42 @@ private struct BookDetailsContent: View {
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
+            } else if case .loading = model.phase {
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                Color.clear
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        // Step 3 puts Save / Remove / Edit in the top bar.
-        .alert("Couldn't load this book", isPresented: $model.showError) {
+        .toolbar {
+            if saved != nil {
+                ToolbarItem(placement: .primaryAction) {
+                    // Step 4 enables Edit.
+                    Button("Edit") {}.disabled(true)
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Remove", role: .destructive) { confirmRemove = true }
+                }
+            } else if case .loaded = model.phase {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Save") { showAddSheet = true }
+                }
+            }
+        }
+        .sheet(isPresented: $showAddSheet) {
+            if case .loaded(let volume) = model.phase { AddToShelfSheet(volume: volume) }
+        }
+        .confirmationDialog("Remove book?", isPresented: $confirmRemove, titleVisibility: .visible) {
+            Button("Remove", role: .destructive) {
+                if let saved { modelContext.delete(saved) }
+            }
+        } message: {
+            Text("It will be taken off your shelf, along with your notes and rating.")
+        }
+        // A failed load only alerts when there is no saved copy to fall back on.
+        .alert("Couldn't load this book",
+               isPresented: Binding(get: { model.showError && saved == nil },
+                                    set: { model.showError = $0 })) {
             Button("OK") { dismiss() }
         } message: {
             Text("Check your connection and try again.")
@@ -103,14 +167,20 @@ private struct Heading: View {
 #Preview("Cover, many tags") {
     NavigationStack { BookDetailsView(volumeID: "rich") }
         .environment(\.booksClient, StubBooksClient(results: [.richSample]))
+        .environment(ConnectivityMonitor())
+        .modelContainer(for: SavedBook.self, inMemory: true)
 }
 
 #Preview("No cover, no tags") {
     NavigationStack { BookDetailsView(volumeID: "bare") }
         .environment(\.booksClient, StubBooksClient(results: [.bareSample]))
+        .environment(ConnectivityMonitor())
+        .modelContainer(for: SavedBook.self, inMemory: true)
 }
 
 #Preview("Load fails") {
     NavigationStack { BookDetailsView(volumeID: "rich") }
         .environment(\.booksClient, StubBooksClient(error: URLError(.notConnectedToInternet)))
+        .environment(ConnectivityMonitor())
+        .modelContainer(for: SavedBook.self, inMemory: true)
 }

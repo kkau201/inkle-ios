@@ -1,0 +1,176 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "· %@" : {
+
+    },
+    "%lld books" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld book"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld books"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld of %lld pages" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld pages"
+          }
+        }
+      }
+    },
+    "About" : {
+
+    },
+    "Add" : {
+
+    },
+    "Add to your shelf" : {
+
+    },
+    "All" : {
+
+    },
+    "Books you save will gather here." : {
+
+    },
+    "Browse the stacks" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Change reading status" : {
+
+    },
+    "Check your connection and try again." : {
+
+    },
+    "Couldn't load this book" : {
+
+    },
+    "Couldn't search" : {
+
+    },
+    "Day" : {
+
+    },
+    "Dust settled in" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Finished" : {
+
+    },
+    "Finished on" : {
+
+    },
+    "Getting a wee bit dusty in here…" : {
+
+    },
+    "Hello, %@" : {
+
+    },
+    "Home" : {
+
+    },
+    "It will be taken off your shelf, along with your notes and rating." : {
+
+    },
+    "Library" : {
+
+    },
+    "Look up any book and save it to your shelf." : {
+
+    },
+    "Month" : {
+
+    },
+    "No results" : {
+
+    },
+    "Not set" : {
+
+    },
+    "Nothing on this shelf yet." : {
+
+    },
+    "OK" : {
+
+    },
+    "On your shelf" : {
+
+    },
+    "Page you're on" : {
+
+    },
+    "Rated %lld out of 5" : {
+
+    },
+    "Reading" : {
+
+    },
+    "Remove" : {
+
+    },
+    "Remove book?" : {
+
+    },
+    "Save" : {
+
+    },
+    "Search" : {
+
+    },
+    "Show %lld more tags" : {
+
+    },
+    "Showing your saved copy" : {
+
+    },
+    "This book has %lld pages." : {
+
+    },
+    "Title or author" : {
+
+    },
+    "Try a different title or author." : {
+
+    },
+    "Try again" : {
+
+    },
+    "Want to read" : {
+
+    },
+    "Year" : {
+
+    },
+    "You're on page %lld" : {
+
+    },
+    "Your shelf" : {
+
+    }
+  },
+  "version" : "1.0"
+}
